@@ -27,6 +27,10 @@ per call in USDC over x402 with your own wallet, from half a cent. Nothing here 
 
 - `GET https://pumpdata.fun/public/baserate.json`: yesterday's base rate for every market-cap band, refreshed
   hourly, the same answer the paid call gives for that day. Read this first; pay only for another window.
+- `GET https://pumpdata.fun/stats.json` (or the MCP tool `stats`): yesterday on pump.fun. Launches, graduations,
+  volume, traders; who made money (top wallets by net SOL, the biggest losers, the share of traders down); the top
+  coins, the fastest graduations; launches and the 1 h graduation rate per UTC hour. `summary` is a paragraph to
+  quote; each wallet and coin names the paid call that goes deeper. A past day: `/stats/{YYYY-MM-DD}.json`.
 - `GET https://pumpdata.fun/llms.txt` (what is in the warehouse), `GET https://pumpdata.fun/openapi.json` (the
   contract, with the price of each call in `x-payment-info`).
 - Telegram: `/baserate 15k-28k` to @pumpdatafun_bot.
@@ -49,6 +53,8 @@ python: https://github.com/pumpdatafun/pumpdata-examples.
 |---|---|---|
 | `GET https://pumpdata.fun/baserate?band=15k-28k&from=<iso>&to=<iso>&venue=any` | a market-cap band (edges snap to 5k, 10k, 15k, 20k, 28k, 40k, 60k, 100k, 250k, 1000k), a window of up to 31 days, `venue` any, curve or pool | `crossed` (coins with a crossing in the window, see Definitions), `reached` {2x, 5x, 10x, 20x} as shares within 3 h, `median_peak`, the window used |
 | `POST https://pumpdata.fun/wallets` `{"addresses": [...], "mint": "<optional>"}` | up to 50 wallets, optionally the coin they are buying | per wallet: `class` (winner, bot, supply_seller, new, none), `pnl_sol`, `put_in`, `took_out`, `coins`, `first_seen`. The labels are rules, not opinions |
+| `GET https://pumpdata.fun/deployer/{address}` | a deployer's wallet | its launches, graduations, best run and last launch; over the last 90 days how many of its launches doubled, did 10x, held at 2x a day later or died, its newest launches by mint; and the base rate for its next launch from deployers with the same record. No coin needed |
+| `GET https://pumpdata.fun/similar/{mint}` | a mint; `?limit=1..25` | the launches most like this one at the same age, named with their mints: the same deployer's prior launches first, then the nearest of the last 90 days by the deployer's record, the first-10 s buyers, the insiders' share and curve progress; for each, how it went over its next 24 h (peak, close, dead or graduated) and why it is similar. Open any of them to check |
 | `GET https://pumpdata.fun/launch/{mint}` | a mint | the deployer's record (launches, graduations, best run, gaps between launches), the bundle at creation, the insiders' share of supply, curve progress, and how launches that looked the same at this age went over the next 24 h |
 | `POST https://pumpdata.fun/replay` `{"picks": [{"mint", "at", "size_sol"}, ...]}` | up to 500 picks, graduates only | `202` with a job id; poll `GET /replay/{id}` (free) until `state` is `done` (or `failed`): what the picks made pick by pick and in sum, filled at the PumpSwap pool as it stood 3 s after the mark, pump.fun's fee by tier, a fixed 145,000 lamports to land each side (entry and exit), graduates that died in the sum; a pick still on the bonding curve, or outside the archive, fills nothing and is counted in `skipped_not_covered` |
 
