@@ -35,6 +35,8 @@ per call in USDC over x402 with your own wallet, from half a cent. Nothing here 
 - `GET https://pumpdata.fun/check/{mint}.json`: the pre-buy check in one call (a coin not checked in the last day: 10 fresh checks an hour per address with no key, then 401 `key_required`; 120 an hour with a free key): `answer` (the findings as sentences), `flags`
   (serial_launcher, deployer_sells_fast, never_ran, curve_bought_at_launch, early_concentration (named bundled before Oct 28, 2026), one_wallet_bought, insiders, sold_together, lookalikes_die,
   each with a sentence), `rules_say` and the launch record behind them. Start here for any coin.
+- `GET https://pumpdata.fun/now.json?mints=<mint>,<mint>` (a key on the monthly plan; up to 50 coins a call, 12 calls a
+  minute): the answer below for each coin, in the order asked, as `coins`; for a scan of many coins.
 - `GET https://pumpdata.fun/now/{mint}.json`: the coin right now (edge-cached 10 s; with no key, since Nov 20, 2026, the market cap and price only and the other fields read "keyed calls only", so send a free key as `x-api-key`; an assistant fetching for a person gets everything): market cap, holders, flow and
   change over 5m/1h/6h/12h, who made the volume, what a 0.1/0.5/1 SOL buy moves the price, and `checks`, the pre-buy
   checklist's live rows (biggest holder, top 10 holders, volume against market cap, fees paid, buy and sell sizes,
